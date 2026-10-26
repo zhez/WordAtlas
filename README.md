@@ -1,8 +1,10 @@
-> **这是同步管理分支。原版源码请查看 [main 分支](https://github.com/zhez/word-atlas/tree/main)。**
+> **WordAtlas 分支说明**
 >
-> `main` 仅保存作者原版代码，锁定为只读并允许同步上游。每周一北京时间 09:00 自动同步 [designfuchen/word-atlas](https://github.com/designfuchen/word-atlas) 的 `main`。
-> 查看、下载或部署原版时请选择 `main`；自己的修改请新建分支或独立项目。
-> 本分支设为默认分支，仅用于运行 GitHub 的定时同步任务，下面的项目介绍属于创建管理分支时的快照。
+> - [`main`](https://github.com/zhez/WordAtlas/tree/main)：作者原版源码，锁定为只读，允许同步上游。
+> - [`custom`](https://github.com/zhez/WordAtlas/tree/custom)：从 `main` 创建的自定义版本分支，用于修改和预览，部署目标为 Oracle `oracle-e2-01`；当前尚未部署。
+> - `sync-management`：同步管理分支，设为默认分支以运行 GitHub 定时任务。本分支里的项目介绍与源码属于创建管理分支时的快照，查看原版请选择 `main`，修改或发布自定义版本请选择 `custom`。
+>
+> 每周一北京时间 09:00 自动将 [designfuchen/word-atlas](https://github.com/designfuchen/word-atlas) 的 `main` 同步到本仓库的 `main`。作者更新不会自动合入 `custom`；需要保留自定义修改时，应另行合并并验证。
 > 仓库所有者仍可在设置中解除保护。GitHub 可能在公开仓库连续 60 天无活动后暂停定时任务；届时需重新启用。
 
 ---
