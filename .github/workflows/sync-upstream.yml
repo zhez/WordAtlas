@@ -1,0 +1,38 @@
+name: Sync upstream
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    if: github.repository == 'zhez/word-atlas'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Merge the author's latest main branch
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          upstream_sha="$(gh api repos/designfuchen/word-atlas/git/ref/heads/main --jq '.object.sha')"
+          # A regular merge preserves fork changes and fails on conflicts.
+          gh api --method POST "repos/$GITHUB_REPOSITORY/merges" \
+            -f base=main \
+            -f head="$upstream_sha" \
+            -f commit_message="Sync upstream designfuchen/word-atlas"
+          {
+            echo "### Upstream synchronization complete"
+            echo "Source: designfuchen/word-atlas"
+            echo "Upstream commit: $upstream_sha"
+            echo "Your main branch includes this commit. Existing fork changes were preserved."
+          } >> "$GITHUB_STEP_SUMMARY"
