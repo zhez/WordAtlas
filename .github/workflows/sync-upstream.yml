@@ -14,25 +14,35 @@ concurrency:
 
 jobs:
   sync:
-    if: github.repository == 'zhez/word-atlas'
+    if: github.repository == 'zhez/word-atlas' && github.ref == 'refs/heads/sync-management'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Merge the author's latest main branch
+      - name: Synchronize the locked original-source branch
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: bash
         run: |
           set -euo pipefail
+          parent="$(gh api "repos/$GITHUB_REPOSITORY" --jq '.parent.full_name')"
+          if [[ "$parent" != "designfuchen/word-atlas" ]]; then
+            echo "::error::The upstream repository has changed. Leaving main untouched."
+            exit 1
+          fi
           upstream_sha="$(gh api repos/designfuchen/word-atlas/git/ref/heads/main --jq '.object.sha')"
-          # A regular merge preserves fork changes and fails on conflicts.
-          gh api --method POST "repos/$GITHUB_REPOSITORY/merges" \
-            -f base=main \
-            -f head="$upstream_sha" \
-            -f commit_message="Sync upstream designfuchen/word-atlas"
+          current_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
+          status="$(gh api "repos/$GITHUB_REPOSITORY/compare/$current_sha...$upstream_sha" --jq '.status')"
+          if [[ "$status" != "ahead" && "$status" != "identical" ]]; then
+            echo "::error::main is no longer a clean upstream mirror. Leaving main untouched."
+            exit 1
+          fi
+          # GitHub's native fork-sync endpoint is permitted on the locked main branch.
+          gh api --method POST "repos/$GITHUB_REPOSITORY/merge-upstream" -f branch=main
+          synced_sha="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq '.object.sha')"
           {
-            echo "### Upstream synchronization complete"
-            echo "Source: designfuchen/word-atlas"
-            echo "Upstream commit: $upstream_sha"
-            echo "Your main branch includes this commit. Existing fork changes were preserved."
+            echo "### Original-source mirror synchronized"
+            echo "Source: designfuchen/word-atlas (main)"
+            echo "Mirror: $GITHUB_REPOSITORY (main)"
+            echo "Mirror commit: $synced_sha"
+            echo "Synchronization configuration lives only on sync-management."
           } >> "$GITHUB_STEP_SUMMARY"
