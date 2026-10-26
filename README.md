@@ -1,3 +1,12 @@
+> **这是同步管理分支。原版源码请查看 [main 分支](https://github.com/zhez/word-atlas/tree/main)。**
+>
+> `main` 仅保存作者原版代码，锁定为只读并允许同步上游。每周一北京时间 09:00 自动同步 [designfuchen/word-atlas](https://github.com/designfuchen/word-atlas) 的 `main`。
+> 查看、下载或部署原版时请选择 `main`；自己的修改请新建分支或独立项目。
+> 本分支设为默认分支，仅用于运行 GitHub 的定时同步任务，下面的项目介绍属于创建管理分支时的快照。
+> 仓库所有者仍可在设置中解除保护。GitHub 可能在公开仓库连续 60 天无活动后暂停定时任务；届时需重新启用。
+
+---
+
 <div align="center">
 
 <a href="https://0xlei.tech/words/"><img src="docs/assets/cover-v2.jpg" alt="词光 Word Atlas — 一词一画，点亮雅思" width="100%"></a>
