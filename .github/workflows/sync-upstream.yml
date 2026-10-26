@@ -14,7 +14,7 @@ concurrency:
 
 jobs:
   sync:
-    if: github.repository == 'zhez/word-atlas' && github.ref == 'refs/heads/sync-management'
+    if: github.repository == 'zhez/WordAtlas' && github.ref == 'refs/heads/sync-management'
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
